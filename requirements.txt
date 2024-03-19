@@ -1,0 +1,17 @@
+streamlit
+toml
+pypdf
+langchain
+langchain_community
+google-generativeai
+sentence-transformers
+qdrant-client
+python-pptx
+pandas
+openpyxl
+docx2txt
+numpy
+python-multipart
+unstructured
+streamlit-pdf-viewer
+pillow
