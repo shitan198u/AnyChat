@@ -1,6 +1,0 @@
-{
-    "python.analysis.extraPaths": [
-        "/home/shsrra/.vscode/extensions/continue.continue-0.6.0-linux-x64",
-        "./src/anychat"
-    ]
-}
