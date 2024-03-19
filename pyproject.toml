@@ -5,7 +5,21 @@ description = "Add your description here"
 authors = [
     { name = "Shitanshu Shivam", email = "shiva.shitanshu2018@gmail.com" }
 ]
-dependencies = []
+dependencies = [
+    "streamlit>=1.32.2",
+    "toml>=0.10.2",
+    "pypdf>=4.1.0",
+    "langchain>=0.1.12",
+    "langchain-core>=0.1.32",
+    "langchain-community>=0.0.28",
+    "langchain-google-genai>=0.0.11",
+    "qdrant-client>=1.8.0",
+    "python-pptx>=0.6.23",
+    "openpyxl>=3.1.2",
+    "docx2txt>=0.8",
+    "python-multipart>=0.0.9",
+    "unstructured>=0.11.8",
+]
 readme = "README.md"
 requires-python = ">= 3.10"
 
