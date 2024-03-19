@@ -69,6 +69,9 @@ def select_embedding_model():
 
 def process_prompt():
     # Display chat history
+    if st.sidebar.button("New Chat", use_container_width=True):
+        st.session_state.chat_dialog_history = []
+
     langchain_local = LangchainLocal(st.session_state)
     for message in st.session_state.chat_dialog_history:
         if isinstance(message, AIMessage):
