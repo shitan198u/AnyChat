@@ -247,6 +247,9 @@ def process_uploaded_documents(documents):
     st.session_state.embedding_model_change_state = False
     # retriever_chain = get_context_retriever_chain(st.session_state.vectorstore)
     # st.session_state.conversation = get_conversational_rag_chain(retriever_chain)
+    # Delete all files inside the temp folder
+    helper = Helper()
+    helper.deleteFilesInTemp()
 
 
 def main():
