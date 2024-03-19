@@ -220,7 +220,7 @@ def upload_and_process_files():
         disabled=st.session_state.error,
     ):
         st.toast(
-            """Hang tight! the documents are being processed for you,
+            """Hang tight! the documents are being processed,
                 it might take several minutes depending on the size of your documents""",
             icon="🤖",
         )
