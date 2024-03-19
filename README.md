@@ -1,2 +1,2 @@
 # AnyChat
-Chat with your Documents, Images, CSV files. Uses langchain, Ollama, Groq, Gemini, Streamlit.
+Chat with your Documents(PDF, TXT, DOCX, ODT, PPTX etc), CSV files. Uses langchain, Ollama, Groq, Gemini, Streamlit.
