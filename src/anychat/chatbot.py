@@ -78,12 +78,13 @@ def process_prompt():
             with st.chat_message("Human"):
                 st.write(message.content)
 
-    if prompt := st.chat_input("Ask a question about your documents"):
-        st.session_state.chat_dialog_history.append(HumanMessage(content=prompt))
+    if st.session_state.chat_dialog_history == []:
+        with st.chat_message("AI"):
+            st.write("Hello! How can I help you today? 🤖")
 
+    if prompt := st.chat_input("Ask a question about your documents"):
         with st.chat_message("Human"):
             st.write(prompt)
-
         with st.chat_message("AI"):
             response = st.write_stream(
                 langchain_local.get_response(
@@ -92,8 +93,9 @@ def process_prompt():
                     vectorstore=st.session_state.vectorstore,
                 )
             )
-
+        st.session_state.chat_dialog_history.append(HumanMessage(content=prompt))
         st.session_state.chat_dialog_history.append(AIMessage(content=response))
+        st.sidebar.write(st.session_state.chat_dialog_history)
 
 
 def load_models():
@@ -169,9 +171,7 @@ def initialize_session_state():
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
     if "chat_dialog_history" not in st.session_state.keys():
-        st.session_state.chat_dialog_history = [
-            AIMessage(content="Hello! How can I help you today?"),
-        ]
+        st.session_state.chat_dialog_history = []
     # using for the check of uploaded documents
     if "disabled" not in st.session_state:
         st.session_state.disabled = True
@@ -198,7 +198,9 @@ def initialize_session_state():
 
 def process_documents():
     if st.session_state.disabled:
-        st.write("🔒 Please upload and process your Documents to unlock the question field.")
+        st.write(
+            "🔒 Please upload and process your Documents to unlock the question field."
+        )
         load_models()
         upload_and_process_files()
     else:

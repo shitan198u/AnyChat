@@ -45,7 +45,6 @@ class LangchainLocal:
                 ("user", "{input}"),
             ]
         )
-
         stuff_documents_chain = create_stuff_documents_chain(self.llm, prompt)
 
         return create_retrieval_chain(retriever_chain, stuff_documents_chain)
@@ -75,6 +74,8 @@ class LangchainLocal:
                 top_p=0.7,
                 top_k=30,
                 temperature=0,
+                verbose=True,
+                convert_system_message_to_human=True,
             )
         elif llm_type == "Groq":
             groq_api_key = secrets["groq_api_key"]
