@@ -153,14 +153,14 @@ def load_models():
 
 def initialize_ui():
     st.set_page_config(
-        page_title="Pustak GPT",
-        page_icon=":books:",
+        page_title="Any Chat",
+        page_icon=":bee:",
         layout="wide",
         initial_sidebar_state="auto",
         menu_items=None,
     )
 
-    st.title("Pustak GPT")
+    st.title("Any Chat :bee: :leaves: ")
     initialize_session_state()
 
 
@@ -198,7 +198,7 @@ def initialize_session_state():
 
 def process_documents():
     if st.session_state.disabled:
-        st.write("🔒 Please upload and process your PDFs to unlock the question field.")
+        st.write("🔒 Please upload and process your Documents to unlock the question field.")
         load_models()
         upload_and_process_files()
     else:

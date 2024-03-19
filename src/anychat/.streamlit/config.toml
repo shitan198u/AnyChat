@@ -9,3 +9,8 @@ enableXsrfProtection=false
 [browser]
 
 gatherUsageStats = false
+
+[theme]
+base="dark"
+primaryColor="#ff9d4b"
+
