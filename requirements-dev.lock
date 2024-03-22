@@ -73,10 +73,10 @@ gitpython==3.1.42
     # via streamlit
 google-ai-generativelanguage==0.4.0
     # via google-generativeai
-google-api-core==2.17.1
+google-api-core==2.18.0
     # via google-ai-generativelanguage
     # via google-generativeai
-google-auth==2.28.2
+google-auth==2.29.0
     # via google-api-core
     # via google-generativeai
 google-generativeai==0.4.1
@@ -132,12 +132,12 @@ jsonschema==4.21.1
     # via altair
 jsonschema-specifications==2023.12.1
     # via jsonschema
-langchain==0.1.12
+langchain==0.1.13
     # via anychat
-langchain-community==0.0.28
+langchain-community==0.0.29
     # via anychat
     # via langchain
-langchain-core==0.1.32
+langchain-core==0.1.33
     # via anychat
     # via langchain
     # via langchain-community
@@ -152,7 +152,7 @@ langchain-text-splitters==0.0.1
     # via langchain
 langdetect==1.0.9
     # via unstructured
-langsmith==0.1.29
+langsmith==0.1.31
     # via langchain
     # via langchain-community
     # via langchain-core
@@ -210,6 +210,7 @@ portalocker==2.8.2
     # via qdrant-client
 proto-plus==1.23.0
     # via google-ai-generativelanguage
+    # via google-api-core
 protobuf==4.25.3
     # via google-ai-generativelanguage
     # via google-api-core
@@ -237,7 +238,7 @@ pydantic==2.6.4
     # via qdrant-client
 pydantic-core==2.16.3
     # via pydantic
-pydeck==0.8.1b0
+pydeck==0.8.0
     # via streamlit
 pygments==2.17.2
     # via rich
