@@ -19,6 +19,29 @@ AnyChat is a powerful chatbot that allows you to interact with your documents (P
 - Python 3.10 or higher
 - A virtual environment (recommended)
 
+### Clone the Repository
+
+Clone the AnyChat repository from GitHub:
+
+```bash
+git clone https://github.com/shitan198u/AnyChat.git
+```
+### Navigate to the working directory
+
+```bash
+cd Anychat
+```
+
+### Using `Rye` (Recommended)
+
+1. Install the Rye package manager: [Installation Guide](https://rye-up.com/guide/installation/)
+
+2. Sync the project:
+
+```bash
+rye sync
+```
+
 ### Using `venv`
 
 1. Create a virtual environment:
@@ -59,29 +82,35 @@ conda activate anychat-env
 conda install --file requirements.txt
 ```
 
+## Configuration
+
+- Rename the `secrets_example.toml` file to `secrets.toml` in the `src/anychat/.streamlit/` directory.
+
 ## Usage
 
 1. **Set API Keys:**
-- If you're using Google Palm or Groq, obtain the necessary API keys and store them securely in the `src/anychat/.streamlit/secrets.toml` file.
+- If you're using Google Gemini or Groq, obtain the necessary API keys and store them securely in the `src/anychat/.streamlit/secrets.toml` file.
 
 2. **Run the Application:**
 
 ```bash
-streamlit run src/anychat/chatbot.py
+cd src/anychat
+streamlit run chatbot.py
+```
+3. **Using Rye**
+
+```bash
+cd src/anychat
+rye run streamlit run chatbot.py
 ```
 
-3. **Upload Documents:**
+4. **Upload Documents:**
 - In the Streamlit interface, upload the documents you want to chat with.
 - Click the "Process" button to process the documents.
 
-4. **Start Chatting:**
+5. **Start Chatting:**
 - Once the documents are processed, you can start asking questions in the chat input field.
 - The chatbot will analyze your documents and provide relevant answers based on their content.
-
-## Configuration
-
-- You can choose different LLMs and embedding models in the Streamlit interface to customize the chatbot's behavior.
-- Refer to the `src/anychat/chatbot.py` file for more configuration options.
 
 ## License
 
