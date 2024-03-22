@@ -86,6 +86,30 @@ conda install --file requirements.txt
 
 - Rename the `secrets_example.toml` file to `secrets.toml` in the `src/anychat/.streamlit/` directory.
 
+## Ollama Installation
+
+To use Ollama for AnyChat, you need to install Ollama and download the necessary models. Follow the instructions below:
+
+1. **Install Ollama:**
+
+Visit the official Ollama website for installation instructions: [Ollama Download](https://ollama.com/download)
+
+2. **Download Ollama Models:**
+
+Open your terminal and run the following commands to download the required models:
+
+```bash
+ollama pull nomic-embed-text
+```
+
+This command downloads the `nomic-embed-text` model, which is necessary for running Ollama embeddings.
+
+```bash
+ollama pull openchat
+```
+
+This command downloads the `openchat` model, which you can use as a language model in AnyChat.
+
 ## Usage
 
 1. **Set API Keys:**
