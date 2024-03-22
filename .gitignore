@@ -1,3 +1,4 @@
 src/anychat/.streamlit/secrets.toml
 .vscode
 src/anychat/temp
+src/anychat/__pycache__/

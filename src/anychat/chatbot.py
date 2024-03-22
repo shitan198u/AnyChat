@@ -67,12 +67,19 @@ def select_embedding_model():
     return model_name
 
 
+def clear_cache():
+    keys = list(st.session_state.keys())
+    for key in keys:
+        st.session_state.pop(key)
+
+
 def process_prompt():
-    # Display chat history
-    if st.sidebar.button("New Chat", use_container_width=True):
+    if st.sidebar.button("🧹 Clear Chat", use_container_width=True):
         st.session_state.chat_dialog_history = []
+    st.sidebar.button("📜 New Chat", use_container_width=True, on_click=clear_cache)
 
     langchain_local = LangchainLocal(st.session_state)
+    # Display chat history
     for message in st.session_state.chat_dialog_history:
         if isinstance(message, AIMessage):
             with st.chat_message("AI"):
@@ -98,7 +105,7 @@ def process_prompt():
             )
         st.session_state.chat_dialog_history.append(HumanMessage(content=prompt))
         st.session_state.chat_dialog_history.append(AIMessage(content=response))
-        st.sidebar.write(st.session_state.chat_dialog_history)
+        # st.sidebar.write(st.session_state.chat_dialog_history)
 
 
 def load_models():

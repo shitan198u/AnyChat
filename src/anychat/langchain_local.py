@@ -22,9 +22,9 @@ class LangchainLocal:
         prompt = ChatPromptTemplate.from_messages(
             [
                 MessagesPlaceholder(variable_name="chat_history"),
-                ("user", "{input}"),
+                ("human", "{input}"),
                 (
-                    "user",
+                    "human",
                     "Given the above conversation, generate a search query to look up in order to get information relevant to the conversation, keep it concise",
                 ),
             ]
@@ -42,7 +42,7 @@ class LangchainLocal:
                     "Answer the user's questions based on the below context:\n\n{context}",
                 ),
                 MessagesPlaceholder(variable_name="chat_history"),
-                ("user", "{input}"),
+                ("human", "{input}"),
             ]
         )
         stuff_documents_chain = create_stuff_documents_chain(self.llm, prompt)
@@ -66,7 +66,8 @@ class LangchainLocal:
         elif llm_type == "Google":
             google_api_key = secrets["palm_api_key"]
             llm = ChatGoogleGenerativeAI(
-                model="gemini-pro",
+                # model="gemini-pro",
+                model="models/gemini-1.0-pro-latest",
                 google_api_key=google_api_key,
                 callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
                 # stream=True,
