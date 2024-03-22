@@ -79,7 +79,7 @@ streamlit run src/anychat/chatbot.py
 ## Configuration
 
 - You can choose different LLMs and embedding models in the Streamlit interface to customize the chatbot's behavior.
-- Refer to the `src/anychat/app.py` file for more configuration options.
+- Refer to the `src/anychat/chatbot.py` file for more configuration options.
 
 ## License
 
