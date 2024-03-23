@@ -1,12 +1,13 @@
 import streamlit as st
 import subprocess
+import requests
 
 from langchain_core.messages import AIMessage, HumanMessage
 
 from langchain_local import LangchainLocal
 from uploadFile import UploadFile
 from helper.helper import Helper
-from ingest import GetVectorstore
+from ingest import GetVectorstore, WebContentProcessor
 
 
 def configure_api_key(api_key_name):
@@ -136,7 +137,7 @@ def load_models():
     ]
 
     # Define Groq models
-    GROQ_MODELS = ["mixtral-8x7b-32768", "llama2-70b-4096"]
+    GROQ_MODELS = ["mixtral-8x7b-32768", "llama2-70b-4096", "gemma-7b-it"]
 
     model_type = st.selectbox("Select LLM ⬇️", LLM_TYPES)
     if model_type == "Google":
@@ -217,13 +218,31 @@ def process_documents():
         process_prompt()
 
 
+def is_valid_url(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        return True
+    except (requests.exceptions.HTTPError, requests.exceptions.RequestException) as e:
+        print(f"An error occurred while checking the URL: {e}")
+        return False
+
+
 def upload_and_process_files():
-    documents = st.file_uploader(
-        "Upload the PDFs here:",
-        accept_multiple_files=True,
-        type=["xlsx", "xls", "csv", "pptx", "docx", "pdf", "txt"],
-    )
-    if documents and st.button(
+    tab1, tab2 = st.tabs(["Documents", "Website"])
+    with tab1:
+        documents = st.file_uploader(
+            "Upload the PDFs here:",
+            accept_multiple_files=True,
+            type=["xlsx", "xls", "csv", "pptx", "docx", "pdf", "txt"],
+        )
+    with tab2:
+        url = st.text_input("Enter the website URL:")
+        if url and not is_valid_url(url):
+            st.error("Invalid URL. Please enter a valid URL.")
+            return
+
+    if (documents or url) and st.button(
         "Process",
         type="secondary",
         use_container_width=True,
@@ -239,27 +258,34 @@ def upload_and_process_files():
                 st.session_state.disabled
                 or st.session_state.embedding_model_change_state
             ):
-                process_uploaded_documents(documents)
+                urls = [url] if url else []
+                process_uploaded_documents(documents, urls)
                 st.session_state.disabled = False
                 st.rerun()
 
 
-def process_uploaded_documents(documents):
+def process_uploaded_documents(documents, urls):
     text_chunks = []
-    for docs in documents:
-        upload = UploadFile(docs)
+
+    for doc in documents:
+        upload = UploadFile(doc)
         splits = upload.get_document_splits()
         text_chunks.extend(splits)
+
+    for url in urls:
+        scrap_website = WebContentProcessor(
+            url
+        )  # Initialize the WebContentProcessor with the URL
+        text_chunks.extend(
+            scrap_website.process()
+        )  # Call the process method of the WebContentProcessor
+
     model_name = select_embedding_model()
     get_vectorstore_instance = GetVectorstore()
     st.session_state.vectorstore = get_vectorstore_instance.get_vectorstore(
         text_chunks, model_name
     )
-    # st.session_state.vectorstore = get_vectorstore(text_chunks)
     st.session_state.embedding_model_change_state = False
-    # retriever_chain = get_context_retriever_chain(st.session_state.vectorstore)
-    # st.session_state.conversation = get_conversational_rag_chain(retriever_chain)
-    # Delete all files inside the temp folder
     helper = Helper()
     helper.deleteFilesInTemp()
 
