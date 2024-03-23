@@ -232,7 +232,7 @@ def upload_and_process_files():
     tab1, tab2 = st.tabs(["Documents", "Website"])
     with tab1:
         documents = st.file_uploader(
-            "Upload the PDFs here:",
+            "Upload the Documents here:",
             accept_multiple_files=True,
             type=["xlsx", "xls", "csv", "pptx", "docx", "pdf", "txt"],
         )
