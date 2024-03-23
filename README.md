@@ -8,6 +8,7 @@ AnyChat is a powerful chatbot that allows you to interact with your documents (P
 
 - **Conversational Interaction:** Ask questions about your documents and receive human-like responses from the chatbot.
 - **Multi-Document Support:** Upload and process various document formats, including PDFs, text files, Word documents, spreadsheets, and presentations.
+- **Website-Chat Support:** Chat with any valid website.
 - **Advanced Language Models:** Choose from different language models (LLMs) like Ollama, Groq, and Gemini to power the chatbot's responses.
 - **Embedding Models:** Select from Ollama Embeddings or GooglePalm Embeddings to enhance the chatbot's understanding of your documents.
 - **User-Friendly Interface:** Streamlit provides a clean and intuitive interface for interacting with the chatbot.
