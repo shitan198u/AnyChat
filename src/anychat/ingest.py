@@ -5,6 +5,7 @@ from langchain_community.document_loaders import Docx2txtLoader
 from langchain_community.document_loaders.csv_loader import CSVLoader
 from langchain_community.document_loaders import UnstructuredPowerPointLoader
 from langchain_community.document_loaders import UnstructuredExcelLoader
+from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Qdrant
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
@@ -88,22 +89,20 @@ class GetVectorstore:
         return vectorstore
 
 
-# class GetVectorstore:
-#     def __init__(self, model_name):
-#         self.model_name = model_name
-#         if model_name == "Ollama Embeddings":
-#             self.embeddings = OllamaEmbeddings(model="nomic-embed-text:latest", num_thread=max(1, int(psutil.cpu_count() * 0.9)))
-#         elif model_name == "GooglePalm Embeddings":
-#             google_api_key = st.secrets["palm_api_key"]
-#             self.embeddings = GoogleGenerativeAIEmbeddings(model='models/embedding-001',google_api_key=google_api_key)
-#         else:
-#             raise ValueError("Unknown embedding model")
+class WebContentProcessor:
+    def __init__(self, url):
+        self.url = url
 
-#     def get_vectorstore(self, chunks):
-#         vectorstore = Qdrant.from_documents(
-#             chunks,
-#             self.embeddings,
-#             location=":memory:",  # Local mode with in-memory storage only
-#             collection_name="my_documents",
-#         )
-#         return vectorstore
+    def process(self):
+        loader = WebBaseLoader(self.url)
+        data = loader.load()
+
+        text_splitter = RecursiveCharacterTextSplitter(
+            separators=["\n\n", "\n", " ", ""],
+            chunk_size=1000,
+            chunk_overlap=300,
+            length_function=len,
+        )
+        chunks = text_splitter.split_documents(data)
+
+        return chunks
