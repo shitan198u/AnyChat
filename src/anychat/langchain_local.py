@@ -71,7 +71,7 @@ class LangchainLocal:
                 google_api_key=google_api_key,
                 callback_manager=CallbackManager([StreamingStdOutCallbackHandler()]),
                 # stream=True,
-                max_output_tokens=2048,
+                max_output_tokens=4096,
                 top_p=0.7,
                 top_k=30,
                 temperature=0,
