@@ -1,6 +1,7 @@
 import streamlit as st
 import subprocess
 import requests
+import yt_dlp
 
 from langchain_core.messages import AIMessage, HumanMessage
 
@@ -227,6 +228,13 @@ def is_valid_url(url):
         print(f"An error occurred while checking the URL: {e}")
         return False
 
+def is_valid_youtube_link(link):
+    try:
+        ydl = yt_dlp.YoutubeDL()
+        ydl.extract_info(link, download=False, process=False)
+        return True
+    except yt_dlp.utils.DownloadError:
+        return False
 
 def upload_and_process_files():
     tab1, tab2, tab3 = st.tabs(["Documents", "Website", "YouTube Chat"])
@@ -244,6 +252,9 @@ def upload_and_process_files():
             return
     with tab3:
         youtube_url = st.text_input("Enter the YouTube URL:")
+        if youtube_url and not is_valid_youtube_link(youtube_url):
+            st.error("Invalid YouTube link. Please enter a valid link.")
+            return
 
     if (documents or url or youtube_url) and st.button(
         "Process",
