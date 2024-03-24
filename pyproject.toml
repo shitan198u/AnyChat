@@ -22,6 +22,11 @@ dependencies = [
     "langchain-groq>=0.0.1",
     "psutil>=5.9.8",
     "networkx>=3.2.1",
+    "yt-dlp>=2024.3.10",
+    "pydub>=0.25.1",
+    "librosa>=0.10.1",
+    "transformers>=4.39.1",
+    "torch>=2.2.1",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"

@@ -12,6 +12,15 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from streamlit import secrets
 import psutil
 
+from langchain_community.document_loaders.blob_loaders.youtube_audio import (
+    YoutubeAudioLoader,
+)
+from langchain_community.document_loaders.generic import GenericLoader
+# from langchain_community.document_loaders.parsers import OpenAIWhisperParser,OpenAIWhisperParserLocal
+from langchain.document_loaders.parsers.audio import (
+OpenAIWhisperParser,
+OpenAIWhisperParserLocal,
+)
 
 class FileProcessor:
     def __init__(self, fileLocation):
@@ -104,5 +113,33 @@ class WebContentProcessor:
             length_function=len,
         )
         chunks = text_splitter.split_documents(data)
+
+        return chunks
+
+
+class YouTubeChatIngest:
+    def __init__(self, url, save_dir, local=False):
+        self.url = url
+        self.save_dir = save_dir
+        self.local = local
+
+    def load_data(self):
+        if self.local:
+            loader = GenericLoader(
+                YoutubeAudioLoader([self.url], self.save_dir),
+                OpenAIWhisperParserLocal(),
+            )
+        else:
+            loader = GenericLoader(
+                YoutubeAudioLoader([self.url], self.save_dir), OpenAIWhisperParser()
+            )
+        docs = loader.load()
+        text_splitter = RecursiveCharacterTextSplitter(
+            separators=["\n\n", "\n", " ", ""],
+            chunk_size=1000,
+            chunk_overlap=300,
+            length_function=len,
+        )
+        chunks = text_splitter.split_documents(docs)
 
         return chunks

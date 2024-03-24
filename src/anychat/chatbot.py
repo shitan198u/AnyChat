@@ -7,7 +7,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_local import LangchainLocal
 from uploadFile import UploadFile
 from helper.helper import Helper
-from ingest import GetVectorstore, WebContentProcessor
+from ingest import GetVectorstore, WebContentProcessor, YouTubeChatIngest
 
 
 def configure_api_key(api_key_name):
@@ -229,7 +229,8 @@ def is_valid_url(url):
 
 
 def upload_and_process_files():
-    tab1, tab2 = st.tabs(["Documents", "Website"])
+    tab1, tab2, tab3 = st.tabs(["Documents", "Website", "YouTube Chat"])
+
     with tab1:
         documents = st.file_uploader(
             "Upload the Documents here:",
@@ -241,8 +242,10 @@ def upload_and_process_files():
         if url and not is_valid_url(url):
             st.error("Invalid URL. Please enter a valid URL.")
             return
+    with tab3:
+        youtube_url = st.text_input("Enter the YouTube URL:")
 
-    if (documents or url) and st.button(
+    if (documents or url or youtube_url) and st.button(
         "Process",
         type="secondary",
         use_container_width=True,
@@ -259,12 +262,13 @@ def upload_and_process_files():
                 or st.session_state.embedding_model_change_state
             ):
                 urls = [url] if url else []
-                process_uploaded_documents(documents, urls)
+                youtube_urls = [youtube_url] if youtube_url else []
+                process_uploaded_documents(documents, urls, youtube_urls)
                 st.session_state.disabled = False
                 st.rerun()
 
 
-def process_uploaded_documents(documents, urls):
+def process_uploaded_documents(documents, urls, youtube_urls):
     text_chunks = []
 
     for doc in documents:
@@ -279,6 +283,11 @@ def process_uploaded_documents(documents, urls):
         text_chunks.extend(
             scrap_website.process()
         )  # Call the process method of the WebContentProcessor
+    for youtube_url in youtube_urls:
+        local = True  # Set to True if you want to use local parsing
+        save_dir = "~/temp"
+        youtube_chunks = YouTubeChatIngest(youtube_url, save_dir, local).load_data()
+        text_chunks.extend(youtube_chunks)
 
     model_name = select_embedding_model()
     get_vectorstore_instance = GetVectorstore()
