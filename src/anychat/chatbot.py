@@ -214,7 +214,7 @@ def process_documents():
             "🔒 Please upload and process your Documents to unlock the question field."
         )
         load_models()
-        upload_and_process_files()
+        set_input_tabs()
     else:
         process_prompt()
 
@@ -228,6 +228,7 @@ def is_valid_url(url):
         print(f"An error occurred while checking the URL: {e}")
         return False
 
+
 def is_valid_youtube_link(link):
     try:
         ydl = yt_dlp.YoutubeDL()
@@ -236,7 +237,8 @@ def is_valid_youtube_link(link):
     except yt_dlp.utils.DownloadError:
         return False
 
-def upload_and_process_files():
+
+def set_input_tabs():
     tab1, tab2, tab3 = st.tabs(["Documents", "Website", "YouTube Chat"])
 
     with tab1:
@@ -245,17 +247,22 @@ def upload_and_process_files():
             accept_multiple_files=True,
             type=["xlsx", "xls", "csv", "pptx", "docx", "pdf", "txt"],
         )
+        process_tabs_content(documents=documents)
     with tab2:
         url = st.text_input("Enter the website URL:")
         if url and not is_valid_url(url):
             st.error("Invalid URL. Please enter a valid URL.")
             return
+        process_tabs_content(url=url)
     with tab3:
         youtube_url = st.text_input("Enter the YouTube URL:")
         if youtube_url and not is_valid_youtube_link(youtube_url):
             st.error("Invalid YouTube link. Please enter a valid link.")
             return
+        process_tabs_content(youtube_url=youtube_url)
 
+
+def process_tabs_content(documents=None, url=None, youtube_url=None):
     if (documents or url or youtube_url) and st.button(
         "Process",
         type="secondary",
@@ -279,26 +286,27 @@ def upload_and_process_files():
                 st.rerun()
 
 
-def process_uploaded_documents(documents, urls, youtube_urls):
+def process_uploaded_documents(documents, url, youtube_url):
     text_chunks = []
 
-    for doc in documents:
-        upload = UploadFile(doc)
-        splits = upload.get_document_splits()
-        text_chunks.extend(splits)
+    if documents is not None:
+        for doc in documents:
+            upload = UploadFile(doc)
+            splits = upload.get_document_splits()
+            text_chunks.extend(splits)
 
-    for url in urls:
-        scrap_website = WebContentProcessor(
-            url
-        )  # Initialize the WebContentProcessor with the URL
-        text_chunks.extend(
-            scrap_website.process()
-        )  # Call the process method of the WebContentProcessor
-    for youtube_url in youtube_urls:
-        local = True  # Set to True if you want to use local parsing
-        save_dir = "~/temp"
-        youtube_chunks = YouTubeChatIngest(youtube_url, save_dir, local).load_data()
-        text_chunks.extend(youtube_chunks)
+    # for url in urls:
+    scrap_website = WebContentProcessor(
+        url
+    )  # Initialize the WebContentProcessor with the URL
+    text_chunks.extend(
+        scrap_website.process()
+    )  # Call the process method of the WebContentProcessor
+    # for youtube_url in youtube_urls:
+    local = True  # Set to True if you want to use local parsing
+    save_dir = "temp"
+    youtube_chunks = YouTubeChatIngest(youtube_url, save_dir, local).load_data()
+    text_chunks.extend(youtube_chunks)
 
     model_name = select_embedding_model()
     get_vectorstore_instance = GetVectorstore()
