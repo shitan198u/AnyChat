@@ -258,8 +258,13 @@ def set_input_tabs():
         youtube_url = st.text_input("Enter the YouTube URL:")
         if youtube_url and not is_valid_youtube_link(youtube_url):
             st.error("Invalid YouTube link. Please enter a valid link.")
-            return
-        process_tabs_content(youtube_url=youtube_url)
+        elif youtube_url:
+            column1, column2 = st.columns(2, gap="medium")
+            with column2:
+                st.info("Link is valid✅")
+                process_tabs_content(youtube_url=youtube_url)
+            with column1:
+                st.video(youtube_url)
 
 
 def process_tabs_content(documents=None, url=None, youtube_url=None):
