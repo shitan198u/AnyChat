@@ -1,13 +1,14 @@
 import streamlit as st
 import subprocess
 import requests
+import yt_dlp
 
 from langchain_core.messages import AIMessage, HumanMessage
 
 from langchain_local import LangchainLocal
 from uploadFile import UploadFile
 from helper.helper import Helper
-from ingest import GetVectorstore, WebContentProcessor
+from ingest import GetVectorstore, WebContentProcessor, YouTubeChatIngest
 
 
 def configure_api_key(api_key_name):
@@ -213,7 +214,7 @@ def process_documents():
             "🔒 Please upload and process your Documents to unlock the question field."
         )
         load_models()
-        upload_and_process_files()
+        set_input_tabs()
     else:
         process_prompt()
 
@@ -228,21 +229,46 @@ def is_valid_url(url):
         return False
 
 
-def upload_and_process_files():
-    tab1, tab2 = st.tabs(["Documents", "Website"])
+def is_valid_youtube_link(link):
+    try:
+        ydl = yt_dlp.YoutubeDL()
+        ydl.extract_info(link, download=False, process=False)
+        return True
+    except yt_dlp.utils.DownloadError:
+        return False
+
+
+def set_input_tabs():
+    tab1, tab2, tab3 = st.tabs(["Documents", "Website", "YouTube Chat"])
+
     with tab1:
         documents = st.file_uploader(
-            "Upload the PDFs here:",
+            "Upload the Documents here:",
             accept_multiple_files=True,
             type=["xlsx", "xls", "csv", "pptx", "docx", "pdf", "txt"],
         )
+        process_tabs_content(documents=documents)
     with tab2:
         url = st.text_input("Enter the website URL:")
         if url and not is_valid_url(url):
             st.error("Invalid URL. Please enter a valid URL.")
             return
+        process_tabs_content(url=url)
+    with tab3:
+        youtube_url = st.text_input("Enter the YouTube URL:")
+        if youtube_url and not is_valid_youtube_link(youtube_url):
+            st.error("Invalid YouTube link. Please enter a valid link.")
+        elif youtube_url:
+            column1, column2 = st.columns(2, gap="medium")
+            with column2:
+                st.info("Link is valid✅")
+                process_tabs_content(youtube_url=youtube_url)
+            with column1:
+                st.video(youtube_url)
 
-    if (documents or url) and st.button(
+
+def process_tabs_content(documents=None, url=None, youtube_url=None):
+    if (documents or url or youtube_url) and st.button(
         "Process",
         type="secondary",
         use_container_width=True,
@@ -259,26 +285,33 @@ def upload_and_process_files():
                 or st.session_state.embedding_model_change_state
             ):
                 urls = [url] if url else []
-                process_uploaded_documents(documents, urls)
+                youtube_urls = [youtube_url] if youtube_url else []
+                process_uploaded_documents(documents, urls, youtube_urls)
                 st.session_state.disabled = False
                 st.rerun()
 
 
-def process_uploaded_documents(documents, urls):
+def process_uploaded_documents(documents, url, youtube_url):
     text_chunks = []
 
-    for doc in documents:
-        upload = UploadFile(doc)
-        splits = upload.get_document_splits()
-        text_chunks.extend(splits)
+    if documents is not None:
+        for doc in documents:
+            upload = UploadFile(doc)
+            splits = upload.get_document_splits()
+            text_chunks.extend(splits)
 
-    for url in urls:
-        scrap_website = WebContentProcessor(
-            url
-        )  # Initialize the WebContentProcessor with the URL
-        text_chunks.extend(
-            scrap_website.process()
-        )  # Call the process method of the WebContentProcessor
+    # for url in urls:
+    scrap_website = WebContentProcessor(
+        url
+    )  # Initialize the WebContentProcessor with the URL
+    text_chunks.extend(
+        scrap_website.process()
+    )  # Call the process method of the WebContentProcessor
+    # for youtube_url in youtube_urls:
+    local = True  # Set to True if you want to use local parsing
+    save_dir = "temp"
+    youtube_chunks = YouTubeChatIngest(youtube_url, save_dir, local).load_data()
+    text_chunks.extend(youtube_chunks)
 
     model_name = select_embedding_model()
     get_vectorstore_instance = GetVectorstore()
