@@ -115,7 +115,7 @@ This command downloads the `openchat` model, which you can use as a language mod
 ## Usage
 
 1. **Set API Keys:**
-- If you're using Google Gemini or Groq, obtain the necessary API keys and store them securely in the `src/anychat/.streamlit/secrets.toml` file.
+- If you're using Google Gemini or Groq, obtain the necessary API keys and store them securely in the `src/anychat/.streamlit/secrets.toml` file or Upload them in the chatbot interface.
 
 2. **Run the Application:**
 
@@ -140,7 +140,7 @@ rye run streamlit run chatbot.py
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0. See the `LICENSE` file for details.
+This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ## Additional Notes
 
