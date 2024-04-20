@@ -318,6 +318,9 @@ def process_uploaded_documents(documents, url, youtube_url):
     st.session_state.vectorstore = get_vectorstore_instance.get_vectorstore(
         text_chunks, model_name
     )
+    if st.session_state.vectorstore is None:
+        st.error("Unable to parse the document. It may be empty or in an unsupported format, Upload a new document and try again.")
+        st.stop()
     st.session_state.embedding_model_change_state = False
     helper = Helper()
     helper.deleteFilesInTemp()

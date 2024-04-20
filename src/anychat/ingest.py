@@ -9,18 +9,20 @@ from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Qdrant
 from langchain_community.embeddings import OllamaEmbeddings
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
-from streamlit import secrets
+from streamlit import secrets, error, stop
 import psutil
 
 from langchain_community.document_loaders.blob_loaders.youtube_audio import (
     YoutubeAudioLoader,
 )
 from langchain_community.document_loaders.generic import GenericLoader
+
 # from langchain_community.document_loaders.parsers import OpenAIWhisperParser,OpenAIWhisperParserLocal
 from langchain.document_loaders.parsers.audio import (
-OpenAIWhisperParser,
-OpenAIWhisperParserLocal,
+    OpenAIWhisperParser,
+    OpenAIWhisperParserLocal,
 )
+
 
 class FileProcessor:
     def __init__(self, fileLocation):
@@ -69,9 +71,6 @@ class FileProcessor:
         chunks = text_splitter.split_documents(document)
         # chunks = text_splitter.create_documents(document)
         return chunks
-        # index = self.__indexDocument(chunks)
-
-        # return index
 
 
 class GetVectorstore:
@@ -89,6 +88,9 @@ class GetVectorstore:
         else:
             raise ValueError("Unknown embedding model")
 
+        if not chunks:
+            return None
+        
         vectorstore = Qdrant.from_documents(
             chunks,
             embeddings,
