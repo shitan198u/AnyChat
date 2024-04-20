@@ -2,7 +2,8 @@
 
 AnyChat is a powerful chatbot that allows you to interact with your documents (PDF, TXT, DOCX, ODT, PPTX, CSV, etc.) in a natural and conversational way. It leverages the capabilities of LangChain, Ollama, Groq, Gemini, and Streamlit to provide an intuitive and informative experience.
 
-[Video Demo](https://github.com/shitan198u/AnyChat/assets/74671269/bf254a76-8e47-4d8f-a4d7-03a318d252d6)
+[Video Demo](https://github.com/shitan198u/AnyChat/assets/74671269/6cdaf9ef-1b52-4ddc-bb45-721b3886f826)
+
 
 ## Features
 
