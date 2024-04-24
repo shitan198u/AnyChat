@@ -138,7 +138,7 @@ def load_models():
     ]
 
     # Define Groq models
-    GROQ_MODELS = ["llama3-8b-8192", "llama3-70b-8192", "mixtral-8x7b-32768", "llama2-70b-4096", "gemma-7b-it" ]
+    GROQ_MODELS = ["llama3-8b-8192", "llama3-70b-8192", "mixtral-8x7b-32768", "gemma-7b-it" ]
 
     model_type = st.selectbox("Select LLM ⬇️", LLM_TYPES)
     if model_type == "Google":
